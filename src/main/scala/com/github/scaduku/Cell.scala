@@ -2,8 +2,6 @@ package com.github.scaduku
 
 class Cell {
 
-
-
   val possibles = Array.fill(9){1}
   var hint = false
 

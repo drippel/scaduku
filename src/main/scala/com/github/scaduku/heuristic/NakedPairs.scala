@@ -34,11 +34,6 @@ class NakedPairs extends Heuristic {
     0
   }
 
-  def reduce( grid : Grid, groups : List[List[Cell]]) : Int = {
-    0
-  }
-
-
   def reduce( grid : Grid, cells : List[Cell] ) : Int = {
     val nps = findNakedPairs(cells)
     for( np <- nps ){

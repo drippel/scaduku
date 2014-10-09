@@ -4,36 +4,49 @@ import com.github.scaduku.{Cell, Grid}
 
 abstract class NonRecursingHeuristic extends Heuristic {
 
-def eliminate( grid : Grid ) : Int = {
+  def eliminate(grid : Grid) : Int = {
     reduceGrid(grid)
   }
 
-  def reduceGrid( grid : Grid ) : Int = {
+  def reduceGrid(grid : Grid) : Int = {
 
-    for( row <- grid.rows ){
-      val c = reduce( grid, row )
-      if( c > 0 ){
-        return c
+    reduceGroups(grid, grid.rows) match {
+      case 0 => {}
+      case i : Int => {
+        return i
       }
     }
 
-    for( col <- grid.cols ){
-      val c = reduce( grid, col )
-      if( c > 0 ){
-        return c
+    reduceGroups(grid, grid.cols) match {
+      case 0 => {}
+      case i : Int => {
+        return i
       }
     }
 
-    for( sub <- grid.subs ){
-      val c = reduce( grid, sub )
-      if( c > 0 ){
-        return c
+    reduceGroups(grid, grid.subs) match {
+      case 0 => {}
+      case i : Int => {
+        return i
       }
     }
 
     0
   }
 
-  def reduce( grid : Grid, cells : List[Cell] ) : Int
+  def reduceGroups(grid : Grid, groups : List[List[Cell]]) : Int = {
+    for( group <- groups ) {
+      reduce(grid, group) match {
+        case 0 => {}
+        case i : Int => {
+          return i
+        }
+      }
+    }
+
+    0
+  }
+
+  def reduce(grid : Grid, cells : List[Cell]) : Int
 
 }

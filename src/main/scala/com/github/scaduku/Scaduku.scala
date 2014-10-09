@@ -1,6 +1,6 @@
 package com.github.scaduku
 
-import com.github.scaduku.heuristic.NakedPairs
+import com.github.scaduku.heuristic.{HiddenPairs, NakedPairs}
 
 class Scaduku {
 
@@ -13,6 +13,7 @@ object Scaduku {
 
     Console.println("scaduku")
     // medium
+    /*
     solve( "030005048000090030900308025091000000703000409000000560420607003060050000180900070" )
     solve( "000000050060300001020401096002049080900572003070830900230605010500003060010000000" )
     solve( "700613000400000000060000915800091400010364070006580001182000040000000008000438002" )
@@ -24,7 +25,8 @@ object Scaduku {
     solve( "400010000000309040070005009000060021004070600190050000900400070030608000000030006" )
     // evil
     solve( "000000070700093500900100000620080100047000920005030068000006002009750006080000000" )
-    // solve( "409716000610389040070245169000964021004173690196852030960421070030698000040537906" )
+    */
+    solve( "409716000610389040070245169000964021004173690196852030960421070030698000040537906" )
 
   }
 
@@ -33,6 +35,13 @@ object Scaduku {
     grid.placeHints( hint )
     Printer.print( grid )
     Console.println( Solver.reduce( grid ) )
+    Printer.print( grid )
+    if( !grid.isSolved() ){
+      Printer.possibles(grid)
+    }
+
+    val hp = new HiddenPairs()
+    hp.eliminate(grid)
     Printer.print( grid )
     if( !grid.isSolved() ){
       Printer.possibles(grid)
