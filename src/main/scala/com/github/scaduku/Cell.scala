@@ -53,6 +53,7 @@ class Cell {
     }
     else {
       " "
+      // "[" + possibleValues().mkString(",") + "]"
     }
   }
 }

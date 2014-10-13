@@ -1,6 +1,6 @@
 package com.github.scaduku
 
-import com.github.scaduku.heuristic.{NakedPairs, SinglePossibilityReducer, SimpleReducer}
+import com.github.scaduku.heuristic._
 
 class Solver {
 }
@@ -26,7 +26,7 @@ object Solver {
   def reduce( grid : Grid ) : Int = {
 
     val simple = new SimpleReducer()
-    val heuristics = List( new SimpleReducer(), new SinglePossibilityReducer(), new NakedPairs() )
+    val heuristics = List( new SimpleReducer(), new SinglePossibilityReducer(), new NakedPairs(), new HiddenPairs(), new SubLineReducer() )
 
     var eliminated = simple.eliminate(grid)
 

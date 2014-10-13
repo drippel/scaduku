@@ -2,29 +2,55 @@ package com.github.scaduku.heuristic
 
 import com.github.scaduku.{Cell, Grid}
 
-import scala.collection.mutable.ListBuffer
-
 class HiddenPairs extends NonRecursingHeuristic {
 
   def reduce( grid : Grid, cells : List[Cell] ) : Int = {
-    findHiddenPairs(cells)
+    val hiddenPairs = findHiddenPairs(cells)
+    for( hp <- hiddenPairs ){
+      reduceHiddenPairs( hp._1, hp._2 ) match {
+        case 0 => {}
+        case i : Int => { return i }
+      }
+    }
     0
   }
 
-  def findHiddenPairs( cells : List[Cell] ) : List[(Cell,Cell)] = {
+  def reduceHiddenPairs( cells : Set[Cell], pair : Set[Int] ) : Int = {
 
-    val pairs = ListBuffer[(Cell,Cell)]()
+    var count = 0
+    for( cell <- cells ) {
+      val possibles = cell.possibleValues().toSet
+      val diff = possibles.diff( pair )
+      for( d <- diff ){
+        cell.eliminate(d)
+        count += 1
+      }
+    }
 
-    val counts = buildCountMap( unsolved( cells ) )
-    val doubles = counts.filter( (t) => { t._2 == 2 } )
+    count
+  }
 
+  def findHiddenPairs( cells : List[Cell] ) = {
 
-    val doubleCells = doubles.map( (d) => { (d,hasPossible( unsolved(cells), d._1 )) } )
+    //
+    val unsolvedCells = unsolved(cells)
 
-    Console.println(doubleCells)
+    // get the possibles that have two cells left
+    val doubles = findDoubles( unsolvedCells )
 
-    val doubleCounts = Map
+    // the cells containing the possibles with 2 left in the group
+    val doubleCells = doubles.map( (d) => { ( d,hasPossible( unsolvedCells, d )) } )
 
-    pairs.toList
+    val sets = doubleCells.map( (m) => { m._2 }).toList
+    val setMap = sets.groupBy( (s) => { s } )
+    val pairsSets = setMap.filter( (s) => { s._2.length == 2 }).keys.toList
+
+    for( ps <- pairsSets ) yield {
+      val p1 = ps.head.possibleValues().toSet
+      val p2 = ps.tail.head.possibleValues().toSet
+      val common = p1.intersect(p2)
+      val pair = common.intersect(doubles.toSet)
+      (ps,pair)
+    }
   }
 }

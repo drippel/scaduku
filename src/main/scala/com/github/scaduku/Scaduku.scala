@@ -1,6 +1,6 @@
 package com.github.scaduku
 
-import com.github.scaduku.heuristic.{HiddenPairs, NakedPairs}
+import com.github.scaduku.heuristic.{SubLineReducer, HiddenPairs, NakedPairs}
 
 class Scaduku {
 
@@ -35,13 +35,6 @@ object Scaduku {
     grid.placeHints( hint )
     Printer.print( grid )
     Console.println( Solver.reduce( grid ) )
-    Printer.print( grid )
-    if( !grid.isSolved() ){
-      Printer.possibles(grid)
-    }
-
-    val hp = new HiddenPairs()
-    hp.eliminate(grid)
     Printer.print( grid )
     if( !grid.isSolved() ){
       Printer.possibles(grid)

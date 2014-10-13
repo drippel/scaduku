@@ -33,4 +33,8 @@ abstract class Heuristic {
   def hasPossible( cells : List[Cell], possible : Int ) : Set[Cell] = {
     cells.filter((c) => { c.possibleValues().contains(possible) }).toSet
   }
+
+  def findDoubles( cells : List[Cell] ) : List[Int] = {
+    buildCountMap( cells ).filter( (m) => { m._2 == 2 }).map( (m) => { m._1 } ).toList
+  }
 }
