@@ -68,7 +68,7 @@ object Solver {
         }
         else {
           var unsolved = grid.unsolved()
-          // unsolved = unsolved.sortWith( (c1,c2) => { c1.possibleValues().length < c2.possibleValues().length } )
+          unsolved = unsolved.sortWith( (c1,c2) => { c1.possibles.length < c2.possibles.length } )
           unsolved match {
             case Nil => {
               // this was the last unset cell
@@ -77,10 +77,10 @@ object Solver {
             }
             case head :: tail => {
 
-              val possibles = head.possibleValues()
+              // val possibles = head.possibles
               // Console.println( level + " head: " + grid.coords( head ) + " " + possibles )
 
-              val moreSols = for( p <- possibles; if (canSet(grid, head, p)) ) yield {
+              val moreSols = for( p <- head.possibles; if (canSet(grid, head, p)) ) yield {
 
                 val copy = grid.clone()
                 val coords = grid.coords(head)

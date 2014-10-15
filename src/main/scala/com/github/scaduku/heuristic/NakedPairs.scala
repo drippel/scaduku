@@ -78,7 +78,7 @@ class NakedPairs extends Heuristic {
   }
 
   def eliminatePossible( p : Int, cell : Cell ) : Int = {
-    if( cell.possibleValues().contains( p ) ){
+    if( cell.isPossible( p ) ){
       cell.eliminate( p )
       1
     }
@@ -90,13 +90,13 @@ class NakedPairs extends Heuristic {
 
   def findNakedPairs( group : Group ) : Map[(Int,Int),List[Cell]] = {
 
-    val pairCells = Group.toList(group).filter( (c) => { c.possibleValues().length == 2 } )
+    val pairCells = Group.toList(group).filter( (c) => { c.possibles.length == 2 } )
 
     val pairMap = mutable.HashMap[ (Int,Int), List[Cell]]()
 
     for( cell <- pairCells ) {
 
-      val pair = ( cell.possibleValues()(0), cell.possibleValues()(1) )
+      val pair = ( cell.possibles(0), cell.possibles(1) )
       pairMap.get( pair ) match {
         case Some(list) => {
           pairMap.put( (pair), ( list ++ List(cell) ) )

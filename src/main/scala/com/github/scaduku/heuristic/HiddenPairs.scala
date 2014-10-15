@@ -19,7 +19,7 @@ class HiddenPairs extends NonRecursingHeuristic {
 
     var count = 0
     for( cell <- cells ) {
-      val possibles = cell.possibleValues().toSet
+      val possibles = cell.possibles.toSet
       val diff = possibles.diff( pair )
       for( d <- diff ){
         cell.eliminate(d)
@@ -46,8 +46,8 @@ class HiddenPairs extends NonRecursingHeuristic {
     val pairsSets = setMap.filter( (s) => { s._2.length == 2 }).keys.toList
 
     for( ps <- pairsSets ) yield {
-      val p1 = ps.head.possibleValues().toSet
-      val p2 = ps.tail.head.possibleValues().toSet
+      val p1 = ps.head.possibles.toSet
+      val p2 = ps.tail.head.possibles.toSet
       val common = p1.intersect(p2)
       val pair = common.intersect(doubles.toSet)
       (ps,pair)

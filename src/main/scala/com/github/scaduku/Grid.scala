@@ -5,7 +5,6 @@ import scala.collection.mutable.ListBuffer
 
 class Grid {
 
-
   val cells = Array.fill(9,9){ new Cell }
 
   var cols : List[Group] = initCols()
@@ -150,7 +149,7 @@ class Grid {
   def buildCountMap( cells : List[Cell] ) : Map[Int,Int] = {
     val counts = mutable.HashMap[Int,Int]()
     for( c <- cells ){
-      val ps = c.possibleValues()
+      val ps = c.possibles
       for( p <- ps ) {
         counts.get(p) match {
           case Some(i) => { counts.put( p, (i+1))}

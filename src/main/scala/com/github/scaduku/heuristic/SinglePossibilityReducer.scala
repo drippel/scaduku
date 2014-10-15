@@ -21,9 +21,8 @@ class SinglePossibilityReducer extends NonRecursingHeuristic {
 
     if( !singleValues.isEmpty ){
       val s = singleValues.head
-      val cell = unsolvedCells.filter( (c) => { c.possibleValues().contains(s) } ).head
+      val cell = unsolvedCells.filter( (c) => { c.isPossible(s) } ).head
       cell.set(s)
-      // simple.eliminate(grid)
       return 1
     }
 

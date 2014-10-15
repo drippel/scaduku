@@ -11,8 +11,7 @@ abstract class Heuristic {
   def buildCountMap( cells : List[Cell] ) : Map[Int,Int] = {
     val counts = HashMap[Int,Int]()
     for( c <- cells ){
-      val ps = c.possibleValues()
-      for( p <- ps ) {
+      for( p <- c.possibles ) {
         counts.get(p) match {
           case Some(i) => { counts.put( p, ( i + 1 ))}
           case None => { counts.put( p, (1))}
@@ -24,7 +23,7 @@ abstract class Heuristic {
   }
 
   def hasPossible( cells : List[Cell], possible : Int ) : Set[Cell] = {
-    cells.filter((c) => { c.possibleValues().contains(possible) }).toSet
+    cells.filter((c) => { c.isPossible( possible) }).toSet
   }
 
   def findDoubles( cells : List[Cell] ) : List[Int] = {

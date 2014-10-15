@@ -13,7 +13,7 @@ class Group {
   }
 
   def hasPossible( possible : Int ) : Set[Cell] = {
-    cells.filter((c) => { c.possibleValues().contains(possible) }).toSet
+    cells.filter((c) => { c.isPossible( possible ) }).toSet
   }
 
   def toSet() : Set[Cell] = { cells.toSet  }
