@@ -49,51 +49,61 @@ object Solver {
 
 
 
-  def bruteForce( grid : Grid, solutions : List[Grid], level : Int = 0 ) : List[Grid] = {
+  def bruteForce( grid : Grid, solutions : List[Grid], level : Int = 0, findFirst : Boolean = true ) : List[Grid] = {
 
-
-    if( !grid.isValid() ){
-      Console.println( level + " not valid")
+    if( !solutions.isEmpty && findFirst ){
       solutions
     }
     else {
 
-      if( grid.isSolved() ) {
-        Console.println( level + " solved -----------------------------------------------------------")
-        solutions ++ List(grid)
+      if( !grid.isValid() ) {
+        // Console.println( level + " not valid")
+        solutions
       }
       else {
-        grid.unsolved() match {
-          case Nil => {
-            // this was the last unset cell
-            Console.println( level + " done -------------------------------------------------------------")
-            solutions
-          }
-          case head :: tail => {
 
-            val possibles = head.possibleValues()
-            Console.println( level + " head: " + grid.coords( head ) + " " + possibles )
+        if( grid.isSolved() ) {
+          // Console.println( level + " solved -----------------------------------------------------------")
+          solutions ++ List(grid)
+        }
+        else {
+          grid.unsolved() match {
+            case Nil => {
+              // this was the last unset cell
+              // Console.println( level + " done -------------------------------------------------------------")
+              solutions
+            }
+            case head :: tail => {
 
-            val moreSols = for( p <- possibles; if( canSet(grid, head, p) ) ) yield {
+              val possibles = head.possibleValues()
+              // Console.println( level + " head: " + grid.coords( head ) + " " + possibles )
+
+              val moreSols = for( p <- possibles; if (canSet(grid, head, p)) ) yield {
 
                 val copy = grid.clone()
                 val coords = grid.coords(head)
                 val toSet = copy.findCell(coords._1, coords._2)
-                Console.println( level + " setting: " + coords._1 +","+ coords._2 +" to " + p )
+                // Console.println( level + " setting: " + coords._1 +","+ coords._2 +" to " + p )
                 toSet.set(p)
                 val sr = new SimpleReducer()
                 var removed = sr.eliminate(copy)
-                while( removed > 0 ){
+                while( removed > 0 ) {
                   removed = sr.eliminate(copy)
                 }
                 // Printer.print(copy)
                 //Printer.print(grid)
                 // Printer.possibles(copy)
-                bruteForce( copy, solutions, (level + 1)  )
+                val tmpSols = bruteForce(copy, solutions, (level + 1))
+                if( !tmpSols.isEmpty && findFirst ){
+                  return tmpSols
+                }
 
+                tmpSols
+
+              }
+
+              solutions ++ moreSols.flatten
             }
-
-            solutions ++ moreSols.flatten
           }
         }
       }

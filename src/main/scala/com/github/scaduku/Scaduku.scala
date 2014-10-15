@@ -39,12 +39,14 @@ object Scaduku {
     val start = System.currentTimeMillis()
     Printer.print( grid )
     Console.println( Solver.reduce( grid ) )
-    Printer.print( grid )
     if( !grid.isSolved() ) {
-      Printer.possibles(grid)
-      Console.println("breaking out brute force")
+      // Printer.possibles(grid)
+      // Console.println("breaking out brute force")
       val b = Solver.bruteForce(grid, List())
       b.foreach((g) => { Printer.print(g) })
+    }
+    else {
+      Printer.print( grid )
     }
     val end = System.currentTimeMillis()
     Console.println("time to solve:" + (end - start))

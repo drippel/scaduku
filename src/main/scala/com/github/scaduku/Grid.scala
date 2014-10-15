@@ -69,11 +69,13 @@ class Grid {
       var x = 0
       for( line <- lines ){
         for( y <- 0 until line.length ){
-          line(y).toString.toInt match {
-            case 0 => {}
-            case i : Int => {
-              cells(x)(y).set(i)
-              cells(x)(y).hint = true
+          if( line(y).isDigit ) {
+            line(y).toString.toInt match {
+              case 0 => {}
+              case i : Int => {
+                cells(x)(y).set(i)
+                cells(x)(y).hint = true
+              }
             }
           }
         }
