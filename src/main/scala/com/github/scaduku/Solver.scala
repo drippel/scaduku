@@ -67,7 +67,9 @@ object Solver {
           solutions ++ List(grid)
         }
         else {
-          grid.unsolved() match {
+          var unsolved = grid.unsolved()
+          // unsolved = unsolved.sortWith( (c1,c2) => { c1.possibleValues().length < c2.possibleValues().length } )
+          unsolved match {
             case Nil => {
               // this was the last unset cell
               // Console.println( level + " done -------------------------------------------------------------")
