@@ -113,28 +113,14 @@ object Solver {
 
   def canSet( grid : Grid, cell : Cell, value : Int ) : Boolean = {
 
-    if( hasValue( grid.findRow(cell), value ) ){
+    if( grid.findRow(cell).hasValue( value )
+        || grid.findCol(cell).hasValue( value )
+        || grid.findSub(cell).hasValue( value ) ) {
       false
     }
     else {
-      if( hasValue( grid.findCol(cell), value ) ){
-        false
-      }
-      else {
-        if( hasValue( grid.findSub(cell), value ) ) {
-          false
-        }
-        else {
-          true
-        }
-      }
+      true
     }
-
-  }
-
-  def hasValue( cells : List[Cell], value : Int ) : Boolean = {
-    val solved = cells.filter( (c) => { c.solved() } ).map( (c) => { c.value() } )
-    solved.contains(value)
   }
 
 }

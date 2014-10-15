@@ -1,6 +1,6 @@
 package com.github.scaduku.heuristic
 
-import com.github.scaduku.{Cell, Grid}
+import com.github.scaduku.{Group, Cell, Grid}
 
 class SubLineReducer extends Heuristic {
 
@@ -8,21 +8,21 @@ class SubLineReducer extends Heuristic {
     reduceSubs( grid, grid.subs.toSet )
   }
 
-  def reduceSubs( grid : Grid, subs : Set[List[Cell]], accum : Int = 0  ) : Int = {
+  def reduceSubs( grid : Grid, subs : Set[Group], accum : Int = 0  ) : Int = {
 
     if( accum > 0 || subs.isEmpty ){
       accum
     }
     else {
       val sub = subs.head
-      val rows = sub.map((c) => { grid.findRow(c) }).toSet
-      val cols = sub.map((c) => { grid.findCol(c) }).toSet
+      val rows = Group.toList( sub ).map((c) => { grid.findRow(c) }).toSet
+      val cols = Group.toList( sub ).map((c) => { grid.findCol(c) }).toSet
       val reduced = reduceSub(grid, sub, (rows ++ cols))
       reduceSubs( grid, subs.tail, reduced )
     }
   }
 
-  def reduceSub( grid : Grid, sub : List[Cell], lines : Set[List[Cell]], accum : Int = 0 ) : Int = {
+  def reduceSub( grid : Grid, sub : Group, lines : Set[Group], accum : Int = 0 ) : Int = {
 
     if( accum > 0 || lines.isEmpty ) {
       accum
@@ -33,20 +33,15 @@ class SubLineReducer extends Heuristic {
     }
   }
 
-  def reduceSubInner( grid : Grid, sub : List[Cell], line : List[Cell] ) : Int = {
+  def reduceSubInner( grid : Grid, sub : Group, line : Group ) : Int = {
 
-    val doubles  = findDoubles( unsolved( line ) )
+    val doubles  = findDoubles( line.unsolved )
 
-    val doubleMap = doubles.map( (d) => {
-      val cs = hasPossible( line, d )
-      (d,cs)
-    })
+    val doubleMap = doubles.map( (d) => { (d,line.hasPossible( d ) ) } )
 
     val doublesInSub = doubleMap.filter( (m) => {
       val cs = m._2
-      cs.forall( (c) => {
-        sub.contains(c)
-      })
+      cs.forall( (c) => { sub.cells.contains(c) })
     })
 
     //

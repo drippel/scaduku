@@ -1,6 +1,6 @@
 package com.github.scaduku.heuristic
 
-import com.github.scaduku.{Cell, Grid}
+import com.github.scaduku.{Group, Cell, Grid}
 
 import scala.collection.mutable
 
@@ -8,10 +8,10 @@ class SinglePossibilityReducer extends NonRecursingHeuristic {
 
   val simple = new SimpleReducer()
 
-  override def reduce( grid : Grid, cells : List[Cell]) : Int = {
+  override def reduce( grid : Grid, group : Group ) : Int = {
 
     // get all the unsolved cells
-    val unsolvedCells = unsolved(cells)
+    val unsolvedCells = group.unsolved
 
     // get counts
     val countMap = buildCountMap(unsolvedCells)
@@ -29,7 +29,5 @@ class SinglePossibilityReducer extends NonRecursingHeuristic {
 
     0
   }
-
-
 
 }

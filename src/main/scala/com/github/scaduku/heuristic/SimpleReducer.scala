@@ -1,16 +1,16 @@
 package com.github.scaduku.heuristic
 
-import com.github.scaduku.{Cell, Grid}
+import com.github.scaduku.{Group, Cell, Grid}
 
 class SimpleReducer extends GroupBasedHeuristic {
 
-  def reduce( grid : Grid, cells : List[Cell] ) : Int = {
+  def reduce( grid : Grid, group : Group ) : Int = {
 
     var count = 0
 
-    val unsolvedCells = unsolved( cells )
+    val unsolvedCells = group.unsolved
 
-    val solvedCells = solved( cells )
+    val solvedCells = group.solved
     val solvedValues = solvedCells.map((c) => { c.value() })
 
     if( !unsolvedCells.isEmpty ) {

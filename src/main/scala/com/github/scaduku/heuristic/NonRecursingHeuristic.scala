@@ -1,6 +1,6 @@
 package com.github.scaduku.heuristic
 
-import com.github.scaduku.{Cell, Grid}
+import com.github.scaduku.{Group, Cell, Grid}
 
 abstract class NonRecursingHeuristic extends Heuristic {
 
@@ -34,7 +34,7 @@ abstract class NonRecursingHeuristic extends Heuristic {
     0
   }
 
-  def reduceGroups(grid : Grid, groups : List[List[Cell]]) : Int = {
+  def reduceGroups(grid : Grid, groups : List[Group]) : Int = {
     for( group <- groups ) {
       reduce(grid, group) match {
         case 0 => {}
@@ -47,6 +47,6 @@ abstract class NonRecursingHeuristic extends Heuristic {
     0
   }
 
-  def reduce(grid : Grid, cells : List[Cell]) : Int
+  def reduce(grid : Grid, group : Group ) : Int
 
 }

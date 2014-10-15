@@ -1,11 +1,11 @@
 package com.github.scaduku.heuristic
 
-import com.github.scaduku.{Cell, Grid}
+import com.github.scaduku.{Group, Cell, Grid}
 
 class HiddenPairs extends NonRecursingHeuristic {
 
-  def reduce( grid : Grid, cells : List[Cell] ) : Int = {
-    val hiddenPairs = findHiddenPairs(cells)
+  def reduce( grid : Grid, group : Group ) : Int = {
+    val hiddenPairs = findHiddenPairs(group)
     for( hp <- hiddenPairs ){
       reduceHiddenPairs( hp._1, hp._2 ) match {
         case 0 => {}
@@ -30,10 +30,10 @@ class HiddenPairs extends NonRecursingHeuristic {
     count
   }
 
-  def findHiddenPairs( cells : List[Cell] ) = {
+  def findHiddenPairs( group : Group ) = {
 
     //
-    val unsolvedCells = unsolved(cells)
+    val unsolvedCells = group.unsolved
 
     // get the possibles that have two cells left
     val doubles = findDoubles( unsolvedCells )

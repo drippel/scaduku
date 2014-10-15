@@ -1,6 +1,6 @@
 package com.github.scaduku.heuristic
 
-import com.github.scaduku.{Cell, Grid}
+import com.github.scaduku.{Group, Cell, Grid}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -34,8 +34,8 @@ class NakedPairs extends Heuristic {
     0
   }
 
-  def reduce( grid : Grid, cells : List[Cell] ) : Int = {
-    val nps = findNakedPairs(cells)
+  def reduce( grid : Grid, group : Group ) : Int = {
+    val nps = findNakedPairs(group)
     for( np <- nps ){
 
       val set1 = Set( grid.findRow(np._2(0)), grid.findCol(np._2(0)), grid.findSub(np._2(0)))
@@ -53,7 +53,7 @@ class NakedPairs extends Heuristic {
     0
   }
 
-  def eliminatePossibles( pairs : ((Int, Int), List[Cell]), subs : List[List[Cell]]) : Int = {
+  def eliminatePossibles( pairs : ((Int, Int), List[Cell]), subs : List[Group] ) : Int = {
 
     var count = 0
 
@@ -63,7 +63,7 @@ class NakedPairs extends Heuristic {
     // from the possibles in the subs
     for( sub <- subs ){
 
-      val cells = sub.filter( (c) => { !pairs._2.contains(c) } )
+      val cells = Group.toList( sub ).filter( (c) => { !pairs._2.contains(c) } )
 
       // if either of the numbers are possibles eliminate them
       for( cell <- cells ){
@@ -88,9 +88,9 @@ class NakedPairs extends Heuristic {
 
   }
 
-  def findNakedPairs( cells : List[Cell] ) : Map[(Int,Int),List[Cell]] = {
+  def findNakedPairs( group : Group ) : Map[(Int,Int),List[Cell]] = {
 
-    val pairCells = cells.filter( (c) => { c.possibleValues().length == 2 } )
+    val pairCells = Group.toList(group).filter( (c) => { c.possibleValues().length == 2 } )
 
     val pairMap = mutable.HashMap[ (Int,Int), List[Cell]]()
 

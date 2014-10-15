@@ -7,13 +7,6 @@ import scala.collection.mutable.HashMap
 abstract class Heuristic {
   def eliminate( grid : Grid ) : Int
 
-  def unsolved( cells : List[Cell] ) : List[Cell] = {
-    cells.filter( (c) => { !c.solved() } )
-  }
-
-  def solved( cells : List[Cell] ) : List[Cell] = {
-    cells.filter( (c) => { c.solved() } )
-  }
 
   def buildCountMap( cells : List[Cell] ) : Map[Int,Int] = {
     val counts = HashMap[Int,Int]()
@@ -21,7 +14,7 @@ abstract class Heuristic {
       val ps = c.possibleValues()
       for( p <- ps ) {
         counts.get(p) match {
-          case Some(i) => { counts.put( p, (i+1))}
+          case Some(i) => { counts.put( p, ( i + 1 ))}
           case None => { counts.put( p, (1))}
         }
       }

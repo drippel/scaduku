@@ -1,6 +1,6 @@
 package com.github.scaduku.heuristic
 
-import com.github.scaduku.{Cell, Grid}
+import com.github.scaduku.{Group, Cell, Grid}
 
 abstract class GroupBasedHeuristic extends Heuristic {
 
@@ -34,6 +34,6 @@ def eliminate( grid : Grid ) : Int = {
     count
   }
 
-  def reduce( grid : Grid, cells : List[Cell] ) : Int
+  def reduce( grid : Grid, group : Group ) : Int
 
 }
