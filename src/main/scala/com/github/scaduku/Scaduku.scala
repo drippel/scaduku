@@ -1,6 +1,6 @@
 package com.github.scaduku
 
-import com.github.scaduku.heuristic.{SubLineReducer, HiddenPairs, NakedPairs}
+import com.github.scaduku.heuristic.{SimpleReducer, SubLineReducer, HiddenPairs, NakedPairs}
 
 class Scaduku {
 
@@ -13,7 +13,6 @@ object Scaduku {
 
     Console.println("scaduku")
     // medium
-    /*
     solve( "030005048000090030900308025091000000703000409000000560420607003060050000180900070" )
     solve( "000000050060300001020401096002049080900572003070830900230605010500003060010000000" )
     solve( "700613000400000000060000915800091400010364070006580001182000040000000008000438002" )
@@ -23,22 +22,32 @@ object Scaduku {
     // hard
     solve( "002500600300080000090400035000038010000704000070920000680007050000010004004005900" )
     solve( "400010000000309040070005009000060021004070600190050000900400070030608000000030006" )
-    // evil
     solve( "000000070700093500900100000620080100047000920005030068000006002009750006080000000" )
-    */
+    // evil
     solve( "409716000610389040070245169000964021004173690196852030960421070030698000040537906" )
+    // wtf
+    solve( "400010000000309040070005009000060021004070600190050000900400070030608000000030006" )
+    solve( "010600003009001000000248900000004190042060380098700000004827000000400200900003040" )
+    solve( "000070050028400000500360900000500390070000010089007000006043008000009120050010000" )
 
   }
 
   def solve( hint : String ) = {
     var grid = new Grid()
     grid.placeHints( hint )
+
+    val start = System.currentTimeMillis()
     Printer.print( grid )
     Console.println( Solver.reduce( grid ) )
     Printer.print( grid )
-    if( !grid.isSolved() ){
+    if( !grid.isSolved() ) {
       Printer.possibles(grid)
+      Console.println("breaking out brute force")
+      val b = Solver.bruteForce(grid, List())
+      b.foreach((g) => { Printer.print(g) })
     }
+    val end = System.currentTimeMillis()
+    Console.println("time to solve:" + (end - start))
   }
 
 }

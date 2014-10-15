@@ -46,4 +46,85 @@ object Solver {
 
     count
   }
+
+
+
+  def bruteForce( grid : Grid, solutions : List[Grid], level : Int = 0 ) : List[Grid] = {
+
+
+    if( !grid.isValid() ){
+      Console.println( level + " not valid")
+      solutions
+    }
+    else {
+
+      if( grid.isSolved() ) {
+        Console.println( level + " solved -----------------------------------------------------------")
+        solutions ++ List(grid)
+      }
+      else {
+        grid.unsolved() match {
+          case Nil => {
+            // this was the last unset cell
+            Console.println( level + " done -------------------------------------------------------------")
+            solutions
+          }
+          case head :: tail => {
+
+            val possibles = head.possibleValues()
+            Console.println( level + " head: " + grid.coords( head ) + " " + possibles )
+
+            val moreSols = for( p <- possibles; if( canSet(grid, head, p) ) ) yield {
+
+                val copy = grid.clone()
+                val coords = grid.coords(head)
+                val toSet = copy.findCell(coords._1, coords._2)
+                Console.println( level + " setting: " + coords._1 +","+ coords._2 +" to " + p )
+                toSet.set(p)
+                val sr = new SimpleReducer()
+                var removed = sr.eliminate(copy)
+                while( removed > 0 ){
+                  removed = sr.eliminate(copy)
+                }
+                // Printer.print(copy)
+                //Printer.print(grid)
+                // Printer.possibles(copy)
+                bruteForce( copy, solutions, (level + 1)  )
+
+            }
+
+            solutions ++ moreSols.flatten
+          }
+        }
+      }
+    }
+
+  }
+
+  def canSet( grid : Grid, cell : Cell, value : Int ) : Boolean = {
+
+    if( hasValue( grid.findRow(cell), value ) ){
+      false
+    }
+    else {
+      if( hasValue( grid.findCol(cell), value ) ){
+        false
+      }
+      else {
+        if( hasValue( grid.findSub(cell), value ) ) {
+          false
+        }
+        else {
+          true
+        }
+      }
+    }
+
+  }
+
+  def hasValue( cells : List[Cell], value : Int ) : Boolean = {
+    val solved = cells.filter( (c) => { c.solved() } ).map( (c) => { c.value() } )
+    solved.contains(value)
+  }
+
 }

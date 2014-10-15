@@ -1,5 +1,6 @@
 package com.github.scaduku
 
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class Grid {
@@ -7,11 +8,11 @@ class Grid {
 
   val cells = Array.fill(9,9){ new Cell }
 
-  val cols : List[List[Cell]] = initRows()
-  val rows : List[List[Cell]] = initCols()
-  val subs : List[List[Cell]] = initSubs()
+  var cols : List[List[Cell]] = initCols()
+  var rows : List[List[Cell]] = initRows()
+  var subs : List[List[Cell]] = initSubs()
 
-  def initCols() = {
+  def initRows() = {
     val rs = new ListBuffer[List[Cell]]()
     for( x <- 0 until 9 ){
       var l = new ListBuffer[Cell]()
@@ -23,7 +24,7 @@ class Grid {
     rs.toList
   }
 
-  def initRows() = {
+  def initCols() = {
     val cs = new ListBuffer[List[Cell]]()
     for( x <- 0 until 9 ){
       var l = new ListBuffer[Cell]()
@@ -106,7 +107,66 @@ class Grid {
   def coords( cell : Cell ) : (Int,Int) = {
     val row = findRow(cell)
     val col = findCol(cell)
-    ( (rows.indexOf(row) + 1 ), (cols.indexOf(col) + 1))
+    // ( (rows.indexOf(row) ), (cols.indexOf(col) ))
+    ( (cols.indexOf(col) ), (rows.indexOf(row) ))
   }
 
+  def findCell( x : Int, y : Int ) : Cell = {
+    cells(y)(x)
+  }
+
+
+  override def clone() : Grid = {
+
+    val copy = new Grid()
+    for( i <- 0 until 9 ){
+      for( j <- 0 until 9 ){
+        copy.cells(i)(j) = cells(i)(j).clone()
+      }
+    }
+
+    copy.rows = copy.initRows
+    copy.cols = copy.initCols
+    copy.subs = copy.initSubs
+
+    copy
+
+  }
+
+  def unsolved() : List[Cell] = {
+
+    val unsolvedCells = for( i <- 0 until 9; j <- 0 until 9; if( !cells(i)(j).solved() ) ) yield cells(i)(j)
+    unsolvedCells.toList
+  }
+
+  def isValid() : Boolean = {
+
+    val groups = rows ++ cols ++ subs
+
+    val exists = for( group <- groups ) yield {
+
+      val solved = group.filter( (c) => { c.solved() } )
+      val counts = buildCountMap( solved )
+      counts.exists( ( (t) => { t._2 > 1 }) )
+
+    }
+
+    exists.forall( (b) => { b == false })
+
+  }
+
+  def buildCountMap( cells : List[Cell] ) : Map[Int,Int] = {
+    val counts = mutable.HashMap[Int,Int]()
+    for( c <- cells ){
+      val ps = c.possibleValues()
+      for( p <- ps ) {
+        counts.get(p) match {
+          case Some(i) => { counts.put( p, (i+1))}
+          case None => { counts.put( p, (1))}
+        }
+      }
+    }
+
+    counts.toMap
+  }
 }

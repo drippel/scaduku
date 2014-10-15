@@ -56,4 +56,17 @@ class Cell {
       // "[" + possibleValues().mkString(",") + "]"
     }
   }
+
+
+  override def clone() : Cell = {
+    val copy = new Cell()
+
+    copy.hint = hint
+
+    for( i <- 0 until 9){
+      copy.possibles(i) = possibles(i)
+    }
+
+    copy
+  }
 }
