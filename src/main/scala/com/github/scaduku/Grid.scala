@@ -16,7 +16,7 @@ class Grid {
     for( x <- 0 until 9 ){
       var g = new Group()
       for( y <- 0 until 9 ){
-        g.cells(y) = cells(x)(y)
+        g.cells += cells(x)(y)
       }
       rs += g
     }
@@ -28,7 +28,7 @@ class Grid {
     for( x <- 0 until 9 ){
       var g = new Group()
       for( y <- 0 until 9 ){
-        g.cells(y) = cells(y)(x)
+        g.cells += cells(y)(x)
       }
       cs += g
     }
@@ -76,8 +76,7 @@ class Grid {
 
   def isSolved() : Boolean = {
     val all = cells.flatten
-    val found = all.find( (c) => { !c.solved() })
-    found.isEmpty
+    !all.exists( (c) => { c.solved() == false })
   }
 
   def findInGroups( cell : Cell, groups : List[Group] ) : Group = {

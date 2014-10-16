@@ -1,8 +1,10 @@
 package com.github.scaduku
 
+import scala.collection.mutable.ListBuffer
+
 class Group {
 
-  val cells = Array.fill(9){ new Cell() }
+  val cells = ListBuffer[Cell]()
 
   def solved() : List[Cell] = {
     cells.filter( (c) => { c.solved() } ).toList
@@ -27,11 +29,8 @@ class Group {
 object Group {
 
   def fromList( list : List[Cell] ) : Group = {
-
     val g = new Group()
-    for( i <- 0 until 9 ){
-      g.cells(i) = list(i)
-    }
+    g.cells ++= list
     g
   }
 
